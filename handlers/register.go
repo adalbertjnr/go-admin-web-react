@@ -8,8 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-const JWTTOKEN = "a5sd4s56a4c654"
-
 type StoreDB struct {
 	db *gorm.DB
 }

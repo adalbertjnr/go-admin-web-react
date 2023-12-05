@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"time"
 
@@ -40,7 +41,7 @@ func (g StoreDB) Login(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"message": "invalid password"})
 	}
 
-	token, err := createToken(user.Id)
+	token, err := createToken(user)
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
 	}
@@ -58,18 +59,19 @@ func (g StoreDB) Login(c *fiber.Ctx) error {
 
 }
 
-func createToken(id uint) (string, error) {
+func createToken(user types.User) (string, error) {
 
-	idString := strconv.Itoa(int(id))
+	idString := strconv.Itoa(int(user.Id))
 	now := time.Now()
 	expires := now.Add(time.Hour * 1).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":      idString,
 		"expires": expires,
+		"email":   user.Email,
 	})
 
-	tokenString, err := token.SignedString([]byte(JWTTOKEN))
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWTTOKEN")))
 	if err != nil {
 		fmt.Println(err)
 		return "", fmt.Errorf("error signing the token")
