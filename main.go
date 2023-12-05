@@ -19,6 +19,8 @@ func main() {
 	app.Use(cors.New(cors.Config{AllowCredentials: true}))
 	app.Post("/api/register", load.Register)
 	app.Post("/api/login", load.Login)
+	app.Get("/api/user", load.User)
+	app.Get("/api/logout", load.Logout)
 
 	log.Fatal(app.Listen(":6000"))
 
