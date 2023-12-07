@@ -14,6 +14,8 @@ type User struct {
 	LastName    string `json:"lastName"`
 	Email       string `json:"email" gorm:"unique"`
 	EncPassword string `json:"encPassword"`
+	RoleId      uint   `json:"role_id"`
+	Role        Role   `json:"role" gorm:"foreignKey:RoleId"`
 }
 
 type NewUser struct {
@@ -27,6 +29,31 @@ type NewUser struct {
 type UserLoginParams struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+const (
+	minFirstName = 5
+	minLastName  = 5
+	minPass      = 5
+)
+
+func (u *NewUser) SetPass(newPass string) {
+	u.Password = newPass
+}
+
+func (u NewUser) ValidateLen() map[string]string {
+	errors := map[string]string{}
+	if len(u.FirstName) < minFirstName {
+		errors["firstName"] = "first name should be 5 characteres length"
+	}
+	if len(u.LastName) < minLastName {
+		errors["lastName"] = "last name should be 5 characteres length"
+	}
+	if len(u.Password) < minPass {
+		errors["password"] = "last name should be 5 characteres length"
+	}
+	return errors
+
 }
 
 func IsEmailValid(e string) bool {

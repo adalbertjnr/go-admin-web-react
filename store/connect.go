@@ -16,7 +16,7 @@ func ConnDB() *gorm.DB {
 		panic(err)
 	}
 
-	db.AutoMigrate(&types.User{})
+	db.AutoMigrate(&types.User{}, &types.Role{})
 
 	return db
 }

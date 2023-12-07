@@ -63,7 +63,7 @@ func createToken(user types.User) (string, error) {
 
 	idString := strconv.Itoa(int(user.Id))
 	now := time.Now()
-	expires := now.Add(time.Hour * 1).Unix()
+	expires := now.Add(time.Hour * 2).Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":      idString,
