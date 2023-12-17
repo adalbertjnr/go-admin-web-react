@@ -23,6 +23,7 @@ type NewUser struct {
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
 	Email     string `json:"email" gorm:"unique"`
+	RoleId    uint   `json:"role_id"`
 	Password  string `json:"password"`
 }
 
@@ -71,6 +72,7 @@ func NewUserFn(newUser NewUser) (*User, error) {
 		FirstName:   newUser.FirstName,
 		LastName:    newUser.LastName,
 		Email:       newUser.Email,
+		RoleId:      newUser.RoleId,
 		EncPassword: string(encPw),
 	}
 
