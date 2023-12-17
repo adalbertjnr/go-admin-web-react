@@ -36,6 +36,7 @@ func (g StoreDB) Register(c *fiber.Ctx) error {
 		LastName:  data["lastName"],
 		Email:     data["email"],
 		Password:  data["password"],
+		RoleId:    uint(1),
 	}
 
 	user, err := types.NewUserFn(userParams)
