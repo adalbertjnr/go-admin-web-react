@@ -23,22 +23,39 @@ func main() {
 		app  = fiber.New()
 	)
 
-	app.Use(cors.New(cors.Config{AllowCredentials: true}))
-	app.Post("/api/register", load.Register)
-	app.Post("/api/login", load.Login)
-	app.Get("/api/logout", middleware.JWTAuthenticate, load.Logout)
+	api := app.Group("/api")
 
-	app.Get("/api/users", middleware.JWTAuthenticate, load.GetAllUsers)
-	app.Post("/api/user", middleware.JWTAuthenticate, load.CreateUser)
-	app.Get("/api/user/:id", middleware.JWTAuthenticate, load.GetUser)
-	app.Put("/api/user/:id", middleware.JWTAuthenticate, load.UpdateUser)
-	app.Delete("/api/user/:id", middleware.JWTAuthenticate, load.DeleteUser)
+	api.Use(cors.New(cors.Config{AllowCredentials: true}))
 
-	app.Get("/api/roles", middleware.JWTAuthenticate, load.GetAllRoles)
-	app.Post("/api/role", middleware.JWTAuthenticate, load.CreateRole)
-	app.Get("/api/role/:id", middleware.JWTAuthenticate, load.GetRole)
-	app.Put("/api/role/:id", middleware.JWTAuthenticate, load.UpdateRole)
-	app.Delete("/api/role/:id", middleware.JWTAuthenticate, load.DeleteRole)
+	api.Post("/register", load.Register)
+	api.Post("/login", load.Login)
+
+	api.Put("/users/info", middleware.JWTAuthenticate, load.UpdateInfo)
+	api.Put("/users/password", middleware.JWTAuthenticate, load.UpdatePassword)
+
+	api.Get("/logout", middleware.JWTAuthenticate, load.Logout)
+
+	api.Get("/users", middleware.JWTAuthenticate, load.GetAllUsers)
+	api.Post("/user", middleware.JWTAuthenticate, load.CreateUser)
+	api.Get("/user/:id", middleware.JWTAuthenticate, load.GetUser)
+	api.Put("/user/:id", middleware.JWTAuthenticate, load.UpdateUser)
+	api.Delete("/user/:id", middleware.JWTAuthenticate, load.DeleteUser)
+
+	api.Post("/product", middleware.JWTAuthenticate, load.CreateProduct)
+	api.Get("/products", middleware.JWTAuthenticate, load.GetAllProducts)
+	api.Get("/product/:id", middleware.JWTAuthenticate, load.GetProduct)
+	api.Put("/product/:id", middleware.JWTAuthenticate, load.UpdateProduct)
+	api.Delete("/product/:id", middleware.JWTAuthenticate, load.DeleteProduct)
+
+	api.Get("/roles", middleware.JWTAuthenticate, load.GetAllRoles)
+	api.Post("/role", middleware.JWTAuthenticate, load.CreateRole)
+	api.Get("/role/:id", middleware.JWTAuthenticate, load.GetRole)
+	api.Put("/role/:id", middleware.JWTAuthenticate, load.UpdateRole)
+	api.Delete("/role/:id", middleware.JWTAuthenticate, load.DeleteRole)
+
+	api.Get("/permissions", middleware.JWTAuthenticate, load.GetAllPermissions)
+
+	api.Post("/upload", middleware.JWTAuthenticate, load.Upload)
 
 	log.Fatal(app.Listen(":6000"))
 
