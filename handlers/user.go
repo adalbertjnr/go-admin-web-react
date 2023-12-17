@@ -9,9 +9,33 @@ import (
 )
 
 func (g StoreDB) GetAllUsers(c *fiber.Ctx) error {
-	users := make([]types.User, 0)
-	g.db.Find(&users)
-	return c.JSON(users)
+
+	page, err := strconv.Atoi(c.Query("page", "1"))
+	if err != nil {
+		c.SendStatus(fiber.StatusInternalServerError)
+		return c.JSON(map[string]string{"msg": "err"})
+	}
+
+	var (
+		limit  = 5
+		total  int64
+		offset = (page - 1) * 5
+		users  = []types.User{}
+	)
+
+	g.db.Preload("Role").Offset(offset).Limit(limit).Find(&users)
+	g.db.Model(types.User{}).Count(&total)
+
+	lastPageInt := (int(total) / limit)
+
+	return c.JSON(fiber.Map{
+		"data": users,
+		"meta": fiber.Map{
+			"total":     total,
+			"page":      page,
+			"last_page": lastPageInt,
+		},
+	})
 }
 
 func (g StoreDB) GetUser(c *fiber.Ctx) error {
