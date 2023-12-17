@@ -4,3 +4,5 @@ run: build
 	@./bin/app
 drop:
 	@go run scripts/drop.go
+db:
+	@docker compose up -d
