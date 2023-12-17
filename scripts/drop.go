@@ -16,6 +16,6 @@ func main() {
 		panic(err)
 	}
 
-	db.Migrator().DropTable(&types.User{})
+	db.Migrator().DropTable(&types.User{}, &types.Role{}, &types.Permission{}, &types.Product{})
 
 }
